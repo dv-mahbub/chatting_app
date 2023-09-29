@@ -91,10 +91,19 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> signIn() async {
     //get the auth service
     final authService = Provider.of<AuthService>(context, listen: false);
-
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
     try{
       await authService.signInWithEmailAndPassword(emailController.text, passwordController.text);
+      Navigator.pop(context);
     } catch(e){
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }

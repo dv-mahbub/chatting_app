@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -30,7 +32,7 @@ class _ChatBubbleState extends State<ChatBubble> {
               :Colors.white,
           ),
           maxLines: null,
-          overflow: TextOverflow.ellipsis,
+          overflow: TextOverflow.fade,
         ),
       ),
     );

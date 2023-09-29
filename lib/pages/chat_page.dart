@@ -74,39 +74,36 @@ class _ChatPageState extends State<ChatPage> {
     //align messages to right and left
     var alignment = (data['senderId'] == _firebaseAuth.currentUser!.uid)
     ? Alignment.centerRight : Alignment.centerLeft;
-    return Container(
-      alignment: alignment,
-      padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          alignment==Alignment.centerRight ? Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              ChatBubble(message: data['message'], alignment: alignment),
-              const SizedBox(width: 3,),
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.blue,
-                child: Text(widget.receiverName[0].toUpperCase(), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),),
-              ),
-            ],
-          )
-          :Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundColor: Colors.blue,
-                child: Text(widget.receiverName[0].toUpperCase(), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),),
-              ),
-              const SizedBox(width: 3,),
-              ChatBubble(message: data['message'], alignment: alignment),
-            ],
-          ),
-          const SizedBox(height: 6,),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        alignment==Alignment.centerRight ? Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Flexible(child: ChatBubble(message: data['message'], alignment: alignment)),
+            const SizedBox(width: 3,),
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.blue,
+              child: Text(widget.receiverName[0].toUpperCase(), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),),
+            ),
+          ],
+        )
+        :Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.blue,
+              child: Text(widget.receiverName[0].toUpperCase(), style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),),
+            ),
+            const SizedBox(width: 3,),
+            Flexible(child: ChatBubble(message: data['message'], alignment: alignment)),
+            SizedBox(width: 25,),
+          ],
+        ),
+        const SizedBox(height: 6,),
+      ],
     );
   }
 

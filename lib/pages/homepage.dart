@@ -1,6 +1,6 @@
+import 'package:chatting_app/services/auth/auth_gate.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,16 +24,19 @@ class _HomepageState extends State<Homepage> {
         title: const Text("Chats"),
         centerTitle: true,
         actions: [
-          ElevatedButton(onPressed: signOut, child: const Text("Sign Out")),
+          ElevatedButton(onPressed: ()=> signOut(context), child: const Text("Sign Out")),
         ],
       ),
       body: _buildUserList(),
     );
   }
 
-  void signOut() {
+  void signOut(BuildContext context) {
     final authService = Provider.of<AuthService>(context, listen: false);
-    authService.signOut();
+    setState(() {
+      authService.signOut();
+    });
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AuthGate()));
   }
 
   //build a list of user except current logged in

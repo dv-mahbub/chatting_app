@@ -1,4 +1,5 @@
 import 'package:chatting_app/firebase_options.dart';
+import 'package:chatting_app/pages/login_page.dart';
 import 'package:chatting_app/pages/register_page.dart';
 import 'package:chatting_app/services/auth/auth_gate.dart';
 import 'package:chatting_app/services/auth/auth_service.dart';
@@ -14,7 +15,7 @@ Future<void> main() async {
       create: (context) =>AuthService(),
       child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: RegisterPage(),
+        home: AuthGate(),
       ),
     )
   );

@@ -23,80 +23,82 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //logo
-              const Icon(Icons.ac_unit, size: 80, color: Colors.teal,),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //logo
+                const Icon(Icons.ac_unit, size: 80, color: Colors.teal,),
 
-              const SizedBox(height: 17,),
+                const SizedBox(height: 17,),
 
-              //welcome message
-              const Text(
-                "Let's create!",
-                style: TextStyle(fontSize: 18),
-              ),
+                //welcome message
+                const Text(
+                  "Let's create!",
+                  style: TextStyle(fontSize: 18),
+                ),
 
-              const SizedBox(height: 17,),
+                const SizedBox(height: 17,),
 
-              //name text field
-              CustomTextField(
-                  controller: nameController,
-                  hintText: "Enter your name",
-                  obscureText: false
-              ),
+                //name text field
+                CustomTextField(
+                    controller: nameController,
+                    hintText: "Enter your name",
+                    obscureText: false
+                ),
 
-              const SizedBox(height: 17,),
+                const SizedBox(height: 17,),
 
-              //email text field
-              CustomTextField(
-                  controller: emailController,
-                  hintText: "Enter your E-mail",
-                  obscureText: false
-              ),
+                //email text field
+                CustomTextField(
+                    controller: emailController,
+                    hintText: "Enter your E-mail",
+                    obscureText: false
+                ),
 
-              const SizedBox(height: 17,),
+                const SizedBox(height: 17,),
 
-              //password text field
-              CustomTextField(
-                controller: passwordController,
-                hintText: "Enter password",
-                obscureText: true,
-              ),
+                //password text field
+                CustomTextField(
+                  controller: passwordController,
+                  hintText: "Enter password",
+                  obscureText: true,
+                ),
 
-              const SizedBox(height: 17,),
+                const SizedBox(height: 17,),
 
-              //confirm password text field
-              CustomTextField(
-                controller: confirmPasswordController,
-                hintText: "Enter password",
-                obscureText: true,
-              ),
+                //confirm password text field
+                CustomTextField(
+                  controller: confirmPasswordController,
+                  hintText: "Enter password",
+                  obscureText: true,
+                ),
 
-              const SizedBox(height: 17,),
+                const SizedBox(height: 17,),
 
-              //login button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                onPressed: signUp, child: const Padding(
-                padding: EdgeInsets.fromLTRB(45,10,45,10),
-                child: Text('Sign Up'),
-              )),
+                //login button
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+                  onPressed: signUp, child: const Padding(
+                  padding: EdgeInsets.fromLTRB(45,10,45,10),
+                  child: Text('Sign Up'),
+                )),
 
-              const SizedBox(height: 17,),
+                const SizedBox(height: 17,),
 
-              //sign up
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already a member?", style: TextStyle(fontSize: 17),),
-                  TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginPage()));}, child: const Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.teal),)),
-                ],
-              )
-            ],
+                //sign up
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Already a member?", style: TextStyle(fontSize: 17),),
+                    TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>const LoginPage()));}, child: const Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: Colors.teal),)),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -104,16 +106,46 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> signUp() async {
+    final authService = Provider.of<AuthService>(context, listen: false);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
     if(passwordController.text != confirmPasswordController.text){
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Confirm password not matched')));
     } else {
-      final authService = Provider.of<AuthService>(context, listen: false);
       try{
         await authService.signUpWithEmailAndPassword(emailController.text, passwordController.text, nameController.text);
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>const Homepage()));
+        await authService.signInWithEmailAndPassword(emailController.text, passwordController.text);
+        Navigator.pop(context);
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>Homepage()));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+        Navigator.pop(context);
       }
+    }
+  }
+  Future<void> signIn() async {
+    //get the auth service
+    final authService = Provider.of<AuthService>(context, listen: false);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    try{
+      Navigator.pop(context);
+    } catch(e){
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
     }
   }
 }
